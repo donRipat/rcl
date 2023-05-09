@@ -1,0 +1,15 @@
+.text-ok {
+    color: #24FF00;
+}
+
+.text-danger {
+    color: #FF0000;
+}
+
+.text-warning {
+    color: #FFA500;
+}
+
+.container{
+    font-size: 150%;
+}
