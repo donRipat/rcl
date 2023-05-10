@@ -16,28 +16,25 @@ export default function OWPage() {
 
     useEffect(() => {
         getApparatuses()
-        getApparatus(1)
+        handleApparatusClick(apparatuses[0])
+        let interval = setInterval(() => {
+            getApparatuses()
+        }, 1000)
+        return () => clearInterval(interval)
     }, [])
 
-    // setInterval(() => getApparatuses(), 31000)
     const [apparatuses, setApparatuses] = useState([{id: 0, name: '', status: {}, devices: []}])
     const getApparatuses = () => {
         try 
         {
             fetch(`${server}/apparatuses`)
             .then(res => res.json())
-            .then(data => {
-            console.log('data', data);
-            console.log('typeof(data):', typeof(data));
-            setApparatuses(data);
-            })
+            .then(data => {setApparatuses(data);})
         }
         catch(error)
         {
             console.log(error);
         };
-        console.log('APPARATUSES:', apparatuses)
-        console.log('APPARATUSES TYPE:', typeof(apparatuses))
     }
 
     const getStatusCell = (status) => {
@@ -63,7 +60,7 @@ export default function OWPage() {
         let ans = []
         for (const i in apparatuses) {
             ans.push(<div className="d-grid gap-2">
-                        <Button className="ap-row px-2 p-1" onClick={() => (handleApparatusClick(apparatuses[i].id))}>
+                        <Button className="ap-row px-2 p-1" onClick={() => (handleApparatusClick(apparatuses[i]))}>
                             <div className="d-flex">
                                 <z className="col-md-9">{apparatuses[i].name}</z>
                                 <z>{getStatusCell(apparatuses[i].status)}</z>
@@ -74,11 +71,15 @@ export default function OWPage() {
         return ans
     }
 
-    const handleApparatusClick = (e) => {
-        console.log('apparatus of ', e)
-        getApparatus(e)
-        // console.log('DEVICE =', devices[0])
-        // console.log('sensors of', devices[0].id)
+    const [intr, setIntr] = useState(0)
+    const handleApparatusClick = (aptus) => {
+        clearInterval(intr)
+        getApparatus(aptus.id)
+        let inter = setInterval(() => {
+            getApparatus(aptus.id)
+        }, 1000)
+        console.log('USE EFFECT AMPLIED')
+        setIntr(inter)
     }
 
     const [apparatus, setApparatus] = useState({id: 0, name: '', status: {}, devices: [ {id: 0, name: '', sensors: [{}]} ]})
@@ -87,11 +88,7 @@ export default function OWPage() {
         {
             fetch(`${server}/apparatus/${e}`)
             .then((res) => res.json())
-            .then((data) => {
-            // console.log('data', data);
-            // console.log('typeof(data):', typeof(data));
-            setApparatus(data);
-         })
+            .then((data) => {setApparatus(data)})
         }
         catch(error)
         {
@@ -102,8 +99,8 @@ export default function OWPage() {
     const apInfo = () => {
         return (<div className="mx-2">
                     <p>
-                        <b>{Object.values(apparatus)[1]} </b>
-                        ({getStatusCell(Object.values(apparatus)[2])})
+                        <b>{apparatus.name} </b>
+                        ({getStatusCell(apparatus.status)})
                     </p>
                 </div>)
     }

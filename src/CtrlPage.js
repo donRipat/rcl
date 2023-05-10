@@ -33,7 +33,7 @@ export default function CtrlPage(props) {
     const navigateOverwatch = () => {
         navigate('/');
     };
- 
+
     const [apparatus, setApparatus] = useState({id: 0, name: '', status: {}, devices: [ {id: 0, name: '', sensors: [{}]} ]})
     const getApparatus = (e) => {
         try 
@@ -41,8 +41,6 @@ export default function CtrlPage(props) {
             fetch(`${server}/apparatus/${e}`)
             .then((res) => res.json())
             .then((data) => {
-            // console.log('data', data);
-            // console.log('typeof(data):', typeof(data));
             setApparatus(data);
          })
         }
@@ -57,8 +55,6 @@ export default function CtrlPage(props) {
         fetch(`${server}/apparatus/${apparatus.id}/status/${1}`)
         .then((res) => res.json())
             .then((data) => {
-            // console.log('data', data);
-            // console.log('typeof(data):', typeof(data));
             setApparatus(data);
          })
     }
@@ -67,8 +63,6 @@ export default function CtrlPage(props) {
         fetch(`${server}/apparatus/${apparatus.id}/status/${2}`)
         .then((res) => res.json())
             .then((data) => {
-            // console.log('data', data);
-            // console.log('typeof(data):', typeof(data));
             setApparatus(data);
          })
     }
@@ -124,11 +118,9 @@ export default function CtrlPage(props) {
     const location = useLocation()
     useEffect(() => {
         const ap = location.state.name.id
-        // getApparatus(ap)
-        // console.log('LOCATION', ap)
-        // getDevices(ap)
-        // getSensors(d)
         getApparatus(ap)
+        const interval = setInterval(() => getApparatus(ap), 1000)
+        return () => clearInterval(interval)
     }, []);
     return (
         <>
