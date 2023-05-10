@@ -18,7 +18,7 @@ function App() {
         <Router>
           {/* <Header/> */}
           <Routes>
-            <Route path="/overwatch" 
+            <Route path="/" 
               element={<OWPage/>}
             />
             <Route path="/control" 
